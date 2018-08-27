@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf8"?>
+<NCReport
+    name="Estrazione dati archivio storico"
+	dataSource="Text"
+	resourceTextFile="file1.html.txt"
+	textDataDelimiter="tab"
+    encoding="utf8"
+    pageSize="A4"
+    orientation="P"
+    printerMode="normal"
+    topMargin="5"
+    bottomMargin="4"
+    leftMargin="10"
+    rightMargin="10"
+    defaultFontName=""
+    defaultFontSize="0"
+    backcolor="#FFFFFF"
+    masterAlias="mst"
+    >
+    
+<queries>
+    <query alias="date">
+		select 1
+    </query>
+    <query alias="istituto">
+		select 1
+    </query>
+    <query alias="mst">
+        SELECT 0
+    </query>
+</queries>
+<variables>
+    <variable name="posnr" type="numeric" funcType="count">section</variable>
+</variables>
+<pageHeader height="30.9359">
+    <field ftype="sql" type="" posX="118.859" posY="4.885" width="70.013" height="5.156" fontSize="10" fontWeight="bold" fontName="Verdana" forecolor="#000000">istituto.nominativo</field>
+    <field ftype="sql" type="" posX="118.859" posY="19.538" width="70.013" height="5.156" fontSize="10" fontWeight="bold" fontName="Verdana" forecolor="#000000">istituto.note</field>
+    <field ftype="sql" type="" posX="118.859" posY="9.769" width="70.013" height="5.156" fontSize="10" fontWeight="bold" fontName="Verdana" forecolor="#000000">istituto.indirizzo</field>
+    <pixmap posX="8.141" posY="1.357" width="81.410" height="26.051" resource="companylogo.png"></pixmap>
+    <field ftype="sql" type="" posX="118.859" posY="14.654" width="70.013" height="5.156" fontSize="10" fontWeight="bold" fontName="Verdana" forecolor="#000000">istituto.ccp</field>
+    <line fromX="0.271" fromY="29.579" toX="190.229" toY="29.579" lineWidth="1" lineStyle="solid"></line>
+</pageHeader>
+<pageFooter height="14.9252">
+    <line fromX="-0.271" fromY="0.814" toX="189.686" toY="0.814" lineWidth="1" lineStyle="solid"></line>
+    <label posX="0.000" posY="5.970" width="199.998" height="3.799" fontSize="8" fontName="verdana" fontItalic="true" forecolor="#666666">Estrazione dati archivio storico [report code PRF0003]</label>
+    <field ftype="sql" type="" posX="0.000" posY="1.900" width="99.321" height="3.799" fontSize="8" fontWeight="bold" fontName="verdana" forecolor="#666666">date.cdate</field>
+    <field ftype="sys" type="" posX="0.000" posY="10.041" width="99.321" height="3.799" fontSize="7" fontName="verdana" fontItalic="true" forecolor="#666666">appinfo</field>
+    <field ftype="sys" type="" posX="169.876" posY="1.900" width="20.081" height="3.799" fontSize="8" fontWeight="bold" fontName="verdana" alignmentH="right" forecolor="#666666">pageno</field>
+</pageFooter>
+<groups>
+</groups>
+<detail height="5.15598">
+    <field ftype="text" type="" posX="0.000" posY="0.000" width="35" height="4.885" fontWeight="bold" fontSize="10" alignmentV="center" richText="false" dynamicHeight="false" loadFromFile="false" forecolor="#000000">0</field>
+    <field ftype="text" type="" posX="36.000" posY="0.000" width="150" height="4.885" fontSize="10" alignmentV="center" richText="true" dynamicHeight="true" loadFromFile="false" forecolor="#000000">1</field>
+</detail>
+</NCReport>

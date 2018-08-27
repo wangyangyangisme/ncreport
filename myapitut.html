@@ -1,0 +1,1378 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1"><title>3. Tutorial</title><link rel="stylesheet" href="userman.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.58.1"><link rel="home" href="index.html" title="MySQL++ User Manual"><link rel="up" href="index.html" title="MySQL++ User Manual"><link rel="previous" href="overview.html" title="2. Overview"><link rel="next" href="tquery.html" title="4. Template Queries"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">3. Tutorial</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="overview.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="tquery.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><h2 class="title" style="clear: both"><a name="tutorial"></a>3. Tutorial</h2></div></div><p>This tutorial is meant to give you a jump start in using
+	MySQL++. While it is a very complicated and powerful library,
+	it's possible to make quite functional programs without tapping
+	but a fraction of its power. This section will introduce you to
+	the most useful fraction.</p><p>This tutorial assumes you know C++ fairly well,
+	in particuler the Standard Template Library (STL) and
+	exceptions.</p><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2860110"></a>3.1. Running the Examples</h3></div></div><p>All of the examples are complete running
+		programs. They may or may not be built for you already,
+		depending on how you installed the library.</p><p>If you installed MySQL++ from the source
+		tarball on a Unixy system, the examples should
+		have been built along with the library. If not,
+		simply go into the examples directory and type
+		<tt>make</tt>.</p><p>If you installed the library via
+		RPM, the examples are in the mysql++-devel
+		RPM. After installing that, the examples are in
+		<tt>/usr/src/mysql++/examples</tt>.
+		To build them, go into that directory
+		and type <tt>make -f
+		Makefile.simple</tt>. See the file
+		<tt>/usr/share/doc/mysql++-devel*/README.examples</tt>
+		for more details.</p><p>If you are on a Windows system, the build process
+		for the library should have built the examples as
+		well. Where the programs are depends on which compiler
+		you're using. There should be a README.* file in the
+		distribution specific to your compiler with further
+		instructions.</p><p>Once you have the examples building, you need
+		to initialize the sample database by running the
+		<tt>resetdb</tt> example. The
+		usage of resetdb is as follows:</p><pre class="screen">	resetdb [host [user [password [port]]]]</pre><p>If you leave off host, localhost is assumed. If
+		you leave off user, your current username is assumed. If
+		you leave of the password, it is assumed that you don't
+		need one. And if you leave off the port, it will use
+		the standard MySQL port number.</p><p>The user you give resetdb needs to be an account
+		with permission to create databases. Once the database is
+		created you can use any account that has full permission
+		to the sample database mysql_cpp_data.</p><p>You may also have to re-run resetdb after
+		running some of the other examples, as they change the
+		database.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2860223"></a>3.2. A Simple Example</h3></div></div><p>The following example demonstrates how to
+		open a connection, execute a simple query, and
+		display the results. This is
+		<tt>examples/simple1.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+using namespace std;
+
+int
+main(int argc, char *argv[])
+{
+    // Connect to the sample database.
+    mysqlpp::Connection con(false);
+    if (!connect_to_db(argc, argv, con)) {
+        return 1;
+    }
+
+    // Retrieve a subset of the sample stock table set up by resetdb
+    mysqlpp::Query query = con.query();
+    query &lt;&lt; &quot;select item from stock&quot;;
+    mysqlpp::Result res = query.store();
+
+    // Display the result set
+    cout &lt;&lt; &quot;We have:&quot; &lt;&lt; endl;
+    if (res) {
+        char buf[100];
+        mysqlpp::Row row;
+        mysqlpp::Row::size_type i;
+        for (i = 0; row = res.at(i); ++i) {
+            cout &lt;&lt; '\t' &lt;&lt; utf8trans(row.at(0), buf, sizeof(buf)) &lt;&lt; endl;
+        }
+    }
+    else {
+        cerr &lt;&lt; &quot;Failed to get item list: &quot; &lt;&lt; query.error() &lt;&lt; endl;
+        return 1;
+    }
+
+    return 0;
+}
+
+		</pre><p>This example simply gets the entire &quot;item&quot;
+		column from the example table, and prints those
+		values out.</p><p>Notice that MySQL++ lets you store
+		result sets in STL containers, such as
+		<tt>std::vector</tt>.
+		We iterate through the result set just as you would
+		with any other STL container. The only tricky bit is
+		the <tt>it-&gt;at(0)</tt> idiom.
+		This dereferences the iterator, which yields a <tt><a href="../../refman/html/classmysqlpp_1_1Row.html">Row</a></tt> object, on which we call
+		the <tt>at()</tt> method to
+		retrieve the first field.</p><p>The only thing that isn't explicitly
+		handled in the code block above is that
+		we delegate connection establishment to
+		<tt>connect_to_db()</tt>
+		in the <tt>util</tt> module.
+		We do this only because that function also handles
+		the command line parsing for the examples, so they
+		have a consistent interface.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2860327"></a>3.3. Examples' Utility Module</h3></div></div><p>I referred to the
+		<tt>util</tt> module
+		above. Following is the source for that module,
+		which also contains other functions used by other
+		examples. It isn't important to understand this module
+		in detail, but understanding its outlines will make
+		the following examples more clear.</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;stdlib.h&gt;
+
+using namespace std;
+
+const char* kpcSampleDatabase = &quot;mysql_cpp_data&quot;;
+
+
+//// utf8trans /////////////////////////////////////////////////////////
+// Converts a Unicode string encoded in UTF-8 form (which the MySQL
+// database uses) to a form suitable for outputting to the standard C++
+// cout stream.  Functionality is platform-specific.
+
+char*
+utf8trans(const char* utf8_str, char* out_buf, int buf_len)
+{
+#ifdef MYSQLPP_PLATFORM_WINDOWS
+    // It's Win32, so assume console output, where output needs to be in
+    // local ANSI code page by default.
+    wchar_t ucs2_buf[100];
+    static const int ub_chars = sizeof(ucs2_buf) / sizeof(ucs2_buf[0]);
+
+    // First, convert UTF-8 string to UCS-2
+    if (MultiByteToWideChar(CP_UTF8, 0, utf8_str, -1,
+            ucs2_buf, ub_chars) &gt; 0) {
+        // Next, convert UCS-2 to local code page.
+        CPINFOEX cpi;
+        GetCPInfoEx(CP_OEMCP, 0, &amp;cpi);
+        WideCharToMultiByte(cpi.CodePage, 0, ucs2_buf, -1,
+                out_buf, buf_len, 0, 0);
+        return out_buf;
+    }
+    else {
+        int err = GetLastError();
+        if (err == ERROR_NO_UNICODE_TRANSLATION) {
+            cerr &lt;&lt; &quot;Bad data in UTF-8 string&quot; &lt;&lt; endl;
+        }
+        else {
+            cerr &lt;&lt; &quot;Unknown error in Unicode translation: &quot; &lt;&lt;
+                    GetLastError() &lt;&lt; endl;
+        }
+        return 0;
+    }
+#else
+    // Assume a modern Unixy platform, where the system's terminal I/O
+    // code handles UTF-8 directly.  (e.g. common Linux distributions
+    // since 2001 or so, recent versions of Mac OS X, etc.)
+    strncpy(out_buf, utf8_str, buf_len);
+    return out_buf;
+#endif
+}
+
+
+//// print_stock_header ////////////////////////////////////////////////
+// Display a header suitable for use with print_stock_rows().
+
+void
+print_stock_header(int rows)
+{
+    cout &lt;&lt; &quot;Records found: &quot; &lt;&lt; rows &lt;&lt; endl &lt;&lt; endl;
+    cout.setf(ios::left);
+    cout &lt;&lt; setw(21) &lt;&lt; &quot;Item&quot; &lt;&lt;
+            setw(10) &lt;&lt; &quot;Num&quot; &lt;&lt;
+            setw(10) &lt;&lt; &quot;Weight&quot; &lt;&lt;
+            setw(10) &lt;&lt; &quot;Price&quot; &lt;&lt;
+            &quot;Date&quot; &lt;&lt; endl &lt;&lt; endl;
+}
+
+
+//// print_stock_row ///////////////////////////////////////////////////
+// Print out a row of data from the stock table, in a format compatible
+// with the header printed out in the previous function.
+
+void
+print_stock_row(const std::string&amp; item, mysqlpp::longlong num,
+        double weight, double price, const mysqlpp::Date&amp; date)
+{
+    // We do UTF-8 translation on item field because there is Unicode
+    // data in this field in the sample database, and some systems
+    // cannot handle UTF-8 sent directly to cout.
+    char buf[100];
+    cout &lt;&lt; setw(20) &lt;&lt; utf8trans(item.c_str(), buf, sizeof(buf)) &lt;&lt; ' ' &lt;&lt;
+            setw(9) &lt;&lt; num &lt;&lt; ' ' &lt;&lt;
+            setw(9) &lt;&lt; weight &lt;&lt; ' ' &lt;&lt;
+            setw(9) &lt;&lt; price &lt;&lt; ' ' &lt;&lt;
+            date &lt;&lt; endl;
+}
+
+
+//// print_stock_row ///////////////////////////////////////////////////
+// Take a Row from the example 'stock' table, break it up into fields,
+// and call the above version of this function.
+
+void
+print_stock_row(const mysqlpp::Row&amp; row)
+{
+    // The brief code below illustrates several aspects of the library
+    // worth noting:
+    //
+    // 1. You can subscript a row by integer (position of the field in
+    // the row) or by string (name of field in the row).  The former is
+    // more efficient, while the latter trades some efficiency for
+    // robustness in the face of schema changes.  (Consider using SSQLS
+    // if you need a tradeoff in between these two positions.)
+    // 
+    // 2. You can also get at a row's field's with Row::at(), which is
+    // much like Row::operator[](int).  Besides the syntax difference,
+    // the only practical difference is that only at() can access field
+    // 0: this is because '0' can be converted to both int and to const
+    // char*, so the compiler rightly complains that it can't decide
+    // which overload to call.
+    //
+    // 3. Notice that we make an explicit temporary copy of the first
+    // field, which is the only string field.  We must tolerate the
+    // inefficiency of this copy, because Row::operator[] returns a
+    // ColData object, which goes away after it is converted to some
+    // other form.  So, while we could have made print_stock_row()
+    // take a const char* argument (as past versions mistakenly did!)
+    // this would result in a dangling pointer, since it points into the
+    // ColData object, which is dead by the time the pointer is
+    // evaluated in print_stock_row().  It will probably even work this
+    // way, but like any memory bug, it can wreak subtle havoc.
+    std::string item(row.at(0));
+    print_stock_row(item, row[&quot;num&quot;], row[2], row[3], row[4]);
+}
+
+
+//// print_stock_rows //////////////////////////////////////////////////
+// Print out a number of rows from the example 'stock' table.
+
+void
+print_stock_rows(mysqlpp::Result&amp; res)
+{
+    print_stock_header(res.size());
+
+    // Use the Result class's read-only random access iterator to walk
+    // through the query results.
+    mysqlpp::Result::iterator i;
+    for (i = res.begin(); i != res.end(); ++i) {
+        // Notice that a dereferenced result iterator can be converted
+        // to a Row object, which makes for easier element access.
+        print_stock_row(*i);
+    }
+}
+
+
+//// get_stock_table ///////////////////////////////////////////////////
+// Retreive the entire contents of the example 'stock' table.
+
+void
+get_stock_table(mysqlpp::Query&amp; query, mysqlpp::Result&amp; res)
+{
+    // Reset the query object, in case we're re-using it.
+    query.reset();
+
+    // You can write to the query object like you would any ostream.
+    query &lt;&lt; &quot;select * from stock&quot;;
+
+    // Show the query string.  If you call preview(), it must be before
+    // you call execute() or store() or use().
+    cout &lt;&lt; &quot;Query: &quot; &lt;&lt; query.preview() &lt;&lt; endl;
+
+    // Execute the query, storing the results in memory.
+    res = query.store();
+}
+
+
+//// connect_to_db /////////////////////////////////////////////////////
+// Establishes a connection to a MySQL database server, optionally
+// attaching to database kdb.  This is basically a command-line parser
+// for the examples, since the example programs' arguments give us the
+// information we need to establish the server connection.
+
+bool
+connect_to_db(int argc, char *argv[], mysqlpp::Connection&amp; con,
+        const char *kdb)
+{
+    if (argc &lt; 1) {
+        cerr &lt;&lt; &quot;Bad argument count: &quot; &lt;&lt; argc &lt;&lt; '!' &lt;&lt; endl;
+        return false;
+    }
+
+    if (!kdb) {
+        kdb = kpcSampleDatabase;
+    }
+
+    if ((argc &gt; 1) &amp;&amp; (argv[1][0] == '-')) {
+        cout &lt;&lt; &quot;usage: &quot; &lt;&lt; argv[0] &lt;&lt;
+                &quot; [host] [user] [password] [port]&quot; &lt;&lt; endl;
+        cout &lt;&lt; endl &lt;&lt; &quot;\tConnects to database &quot;;
+        if (strlen(kdb) &gt; 0) {
+            cout &lt;&lt; '&quot;' &lt;&lt; kdb &lt;&lt; '&quot;';
+        }
+        else {
+            cout &lt;&lt; &quot;server&quot;;
+        }
+        cout &lt;&lt; &quot; on localhost using your user&quot; &lt;&lt; endl;
+        cout &lt;&lt; &quot;\tname and no password by default.&quot; &lt;&lt; endl &lt;&lt; endl;
+        return false;
+    }
+
+    if (argc == 1) {
+        con.connect(kdb);
+    }
+    else if (argc == 2) {
+        con.connect(kdb, argv[1]);
+    }
+    else if (argc == 3) {
+        con.connect(kdb, argv[1], argv[2]);
+    }
+    else if (argc == 4) {
+        con.connect(kdb, argv[1], argv[2], argv[3]);
+    }
+    else if (argc &gt;= 5) {
+        con.connect(kdb, argv[1], argv[2], argv[3], atoi(argv[4]));
+    }
+
+    if (con) {
+        return true;
+    }
+    else {
+        cerr &lt;&lt; &quot;Database connection failed: &quot; &lt;&lt; con.error() &lt;&lt; endl;
+        return false;
+    }
+}
+
+		</pre><p>This is actually an abridged version of util.cpp,
+		with the Unicode stuff removed. The interaction
+		between MySQL, MySQL++ and Unicode is covered in a
+		later chapter, <a href="unicode.html">Using Unicode with MySQL++</a>.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2860383"></a>3.4. A More Complicated Example</h3></div></div><p>The <tt>simple1</tt>
+		example above was pretty trivial. Let's
+		get a little deeper. Here is
+		<tt>examples/simple2.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+using namespace std;
+
+int
+main(int argc, char *argv[])
+{
+    // Connect to the sample database.
+    mysqlpp::Connection con(false);
+    if (!connect_to_db(argc, argv, con)) {
+        return 1;
+    }
+
+    // Retrieve the sample stock table set up by resetdb
+    mysqlpp::Query query = con.query();
+    query &lt;&lt; &quot;select * from stock&quot;;
+    mysqlpp::Result res = query.store();
+
+    // Display results
+    if (res) {
+        // Display header
+        cout.setf(ios::left);
+        cout &lt;&lt; setw(21) &lt;&lt; &quot;Item&quot; &lt;&lt;
+                setw(10) &lt;&lt; &quot;Num&quot; &lt;&lt;
+                setw(10) &lt;&lt; &quot;Weight&quot; &lt;&lt;
+                setw(10) &lt;&lt; &quot;Price&quot; &lt;&lt;
+                &quot;Date&quot; &lt;&lt; endl &lt;&lt; endl;
+
+        // Get each row in result set, and print its contents
+        char buf[100];
+        mysqlpp::Row row;
+        mysqlpp::Row::size_type i;
+        for (i = 0; row = res.at(i); ++i) {
+            cout &lt;&lt; setw(20) &lt;&lt;
+                    utf8trans(row[&quot;item&quot;], buf, sizeof(buf)) &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;num&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;weight&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;price&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;sdate&quot;] &lt;&lt;
+                    endl;
+        }
+    }
+    else {
+        cerr &lt;&lt; &quot;Failed to get stock table: &quot; &lt;&lt; query.error() &lt;&lt; endl;
+        return 1;
+    }
+
+    return 0;
+}
+
+		</pre><p>This example illustrates several new concepts.</p><p>First, notice that we store the result set in
+		a <tt><a href="../../refman/html/classmysqlpp_1_1Result.html">Result</a></tt> object. Like
+		the a <tt>std::vector</tt> we
+		used in the <tt>simple1</tt>
+		example, <tt>Result</tt>
+		is a container type, so iterating through it
+		is straightforward. The main difference is that
+		<tt>Result</tt> is less
+		distanced from the way the underlying MySQL C API
+		works, so it is somewhat more efficient.</p><p>Second, we access each row's data indirectly
+		through a <tt><a href="../../refman/html/classmysqlpp_1_1Row.html">Row</a></tt>
+		object. This affords several nice features, such
+		as the ability to access a field by name.  You can
+		also access fields by position, as we did in the
+		<tt>simple1</tt> example,
+		which is more efficient, but makes your code less
+		flexible.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="exceptions"></a>3.5. Exceptions</h3></div></div><p>By default, MySQL++ uses exceptions to signal
+		errors. Most of the examples have a full set of
+		exception handlers. This is worthy of emulation.</p><p>All of MySQL++'s custom exceptions derive
+		from a common base class, <tt><a href="../../refman/html/classmysqlpp_1_1Exception.html">Exception</a></tt>. That in turn derives from the
+		Standard C++ exception base class,
+		<tt>std::exception</tt>.
+		Since the library can indirectly cause exceptions
+		to come from the Standard C++ Library, it's possible
+		to catch all exceptions from MySQL++ by just catching
+		<tt>std::exception</tt> by
+		reference. However, it's usually better to catch
+		the all of the concret eexception types that you
+		expect, and add a handler for
+		<tt>Exception</tt> or
+		<tt>std::exception</tt> to
+		act as a &quot;catch-all&quot; for unexpected exceptions.</p><p>Some of these exceptions are optional.
+		When disabled, the object signals errors in
+		some other way, typically by returning an
+		error code or setting an error flag. Classes
+		that support this feature derive from
+		<tt><a href="../../refman/html/classmysqlpp_1_1OptionalExceptions.html">OptionalExceptions</a></tt>.
+		Moreover, when such an object creates another object
+		that also derives from this interface, it passes on its
+		exception flag. Since everything flows from the
+		<tt><a href="../../refman/html/classmysqlpp_1_1Connection.html">Connection</a></tt>
+		object, disabling exceptions on it at the start of
+		the program disables all optional exceptions. You can
+		see this technique at work in the &quot;simple&quot; examples,
+		which keeps them, well, simple.</p><p>Real-world code typically can't afford to
+		lose out on the additional information and control
+		offered by exceptions. But at the same time, it is
+		still sometimes useful to disable exceptions
+		temporarily. To do this, put the section of code
+		that you want to not throw exceptions inside a
+		block, and create a <tt><a href="../../refman/html/classmysqlpp_1_1NoExceptions.html">NoExceptions</a></tt> object at the top of that
+		block. When created, it saves the exception flag
+		of the <tt>OptionalExceptions</tt>
+		derivative you pass to it, and then disables
+		exceptions on it. When the
+		<tt>NoExceptions</tt> object
+		goes out of scope at the end of the block, it
+		restores the exceptions flag to its previous state.
+		See <tt>examples/resetdb.cpp</tt> to
+		see this technique at work.</p><p>When one
+		<tt>OptionalExceptions</tt>
+		derivative creates another such object and passes
+		on its exception flag, it passes a copy of the
+		flag. Therefore, the two objects' flags operate
+		independently after the new one is created. There's
+		no way to globally enable or disable this flag on
+		existing objects in a single call.</p><p>There are a few classes of exceptions MySQL++
+		can throw that are not optional:</p><div class="itemizedlist"><ul type="disc"><li><p>The largest set of non-optional
+			exceptions are those from the Standard C++
+			Library. For instance, if your code said
+			&quot;<tt>row[21]</tt>&quot;
+			on a row containing only 5 fields, the
+			<tt>std::vector</tt>
+			underlying the row object will throw an
+			exception. (It will, that is, if it conforms to
+			the standard.) You might consider wrapping your
+			program's main loop in a try block catching
+			<tt>std::exception</tt>s,
+			just in case you trigger one of these
+			exceptions.</p></li><li><p><tt><a href="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</a></tt>
+			will always throw <tt><a href="../../refman/html/classmysqlpp_1_1BadConversion.html">BadConversion</a></tt>
+			when you ask it to do an improper type
+			conversion. For example, you'll get an
+			exception if you try to convert &quot;1.25&quot;
+			to <tt>int</tt>,
+			but not when you convert &quot;1.00&quot; to
+			<tt>int</tt>. In
+			the latter case, MySQL++ knows that it
+			can safely throw away the fractional
+			part.</p></li><li><p>If you use template
+			queries and don't pass enough parameters
+			when instantiating the template,
+			<tt>Query</tt>
+			will throw a <tt><a href="../../refman/html/classmysqlpp_1_1BadParamCount.html">BadParamCount</a></tt>
+			exception.</p></li></ul></div><p>It's educational to modify the examples to
+		force exceptions. For instance, misspell a field
+		name, use an out-of-range index, or change a type
+		to force a <tt>ColData</tt>
+		conversion error.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2806700"></a>3.6. Quoting and Escaping</h3></div></div><p>SQL syntax often requires certain data to be
+		quoted. Consider this query:</p><pre class="programlisting">
+SELECT * FROM stock WHERE item = 'Hotdog Buns' </pre><p>Because the string &quot;Hotdog Buns&quot; contains a space,
+		it must be quoted. With MySQL++, you don't have to add
+		these quote marks manually:</p><pre class="programlisting">
+string s = &quot;Hotdog Buns&quot;;
+Query q = conn.query();
+q &lt;&lt; &quot;SELECT * FROM stock WHERE item = &quot; &lt;&lt; quote_only &lt;&lt; s; </pre><p>That code produces the same query string
+		as in the previous example. We used the MySQL++
+		<tt>quote_only</tt>
+		manipulator, which causes single quotes to be
+		added around the next item inserted into the
+		stream. This works for various string types, for any
+		type of data that can be converted to MySQL++'s
+		<tt><a href="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</a></tt>
+		type, and for <a href="ssqls.html">Specialized SQL Structures</a>. (The next section
+		introduces the SSQLS feature.)</p><p>Quoting is pretty simple, but SQL syntax also often
+		requires that certain characters be &quot;escaped&quot;. Imagine
+		if the string in the previous example was &quot;Frank's Brand Hotdog
+		Buns&quot; instead. The resulting query would be:</p><pre class="programlisting">
+SELECT * FROM stock WHERE item = 'Frank's Brand Hotdog Buns' </pre><p>That's not valid SQL syntax. The correct syntax is:</p><pre class="programlisting">
+SELECT * FROM stock WHERE item = 'Frank''s Brand Hotdog Buns' </pre><p>As you might expect, MySQL++
+		provides that feature, too, through its
+		<tt>escape</tt>
+		manipulator. But here, we want both quoting and
+		escaping. That brings us to the most widely useful
+		manipulator:</p><pre class="programlisting">
+string s = &quot;Frank's Brand Hotdog Buns&quot;;
+Query q = conn.query();
+q &lt;&lt; &quot;SELECT * FROM stock WHERE item = &quot; &lt;&lt; quote &lt;&lt; s; </pre><p>The <tt>quote</tt>
+		manipulator both quotes strings, and escapes any
+		characters that are special in SQL.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2806840"></a>3.7. Specialized SQL Structures</h3></div></div><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2806847"></a>Retrieving data</h4></div></div><p>The next example introduces one of
+			the most powerful features of MySQL++: <a href="ssqls.html">Specialized SQL Structures</a> (SSQLS). This is
+			<tt>examples/custom1.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+#include &lt;custom.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+// The following is calling a very complex macro which will create
+// &quot;struct stock&quot;, which has the member variables:
+//
+//   string item
+//   ...
+//   Date sdate
+//
+// plus methods to help populate the class from a MySQL row
+// among other things that I'll get to in a later example.
+sql_create_5(stock,
+             1, 5,              // explained in the user manual
+             string, item,
+             longlong, num,
+             double, weight,
+             double, price,
+             Date, sdate)
+
+int
+main(int argc, char *argv[])
+{
+    // Wrap all MySQL++ interactions in one big try block, so any
+    // errors are handled gracefully.
+    try {                       
+        // Establish the connection to the database server.
+        Connection con(use_exceptions);
+        if (!connect_to_db(argc, argv, con)) {
+            return 1;
+        }
+
+        // Retrieve the entire contents of the stock table, and store
+        // the data in a vector of 'stock' SSQLS structures.
+        Query query = con.query();
+        query &lt;&lt; &quot;select * from stock&quot;;
+        vector&lt;stock&gt; res;
+        query.storein(res);
+
+        // Display the result set
+        print_stock_header(res.size());
+        vector&lt;stock&gt;::iterator it;
+        for (it = res.begin(); it != res.end(); ++it) {
+            print_stock_row(it-&gt;item, it-&gt;num, it-&gt;weight, it-&gt;price,
+                    it-&gt;sdate);
+        }
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions; e.g. type mismatch populating 'stock'
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre><p>As you can see, SSQLS is very powerful.</p></div><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2806897"></a>Adding data</h4></div></div><p>SSQLS can also be used to add data to a table. This
+			is <tt>examples/custom2.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+#include &lt;custom.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+sql_create_5(stock,
+            1, 5,
+            string, item,
+            longlong, num,
+            double, weight,
+            double, price,
+            Date, sdate)
+
+int
+main(int argc, char *argv[])
+{
+    try {
+        // Establish the connection to the database server.
+        Connection con(use_exceptions);
+        if (!connect_to_db(argc, argv, con)) {
+            return 1;
+        }
+
+        // Create and populate a stock object.  We could also have used
+        // the set() member, which takes the same parameters as this
+        // constructor.
+        stock row(&quot;Hot Dogs&quot;, 100, 1.5, 1.75, &quot;1998-09-25&quot;);
+
+        // Form the query to insert the row into the stock table.
+        Query query = con.query();
+        query.insert(row);
+
+        // Show the query about to be executed.
+        cout &lt;&lt; &quot;Query: &quot; &lt;&lt; query.preview() &lt;&lt; endl;
+
+        // Execute the query.  We use execute() because INSERT doesn't
+        // return a result set.
+        query.execute();
+
+        // Print the new table.
+        Result res;
+        get_stock_table(query, res);
+        print_stock_rows(res);
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {   
+        // Handle bad conversions
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre><p>That's all there is to it!</p><p>There is one subtlety: MySQL++ automatically
+			quotes and escapes the data when building SQL
+			queries using SSQLS structures. It's efficient,
+			too: MySQL++ is smart enough to apply quoting
+			and escaping only for those data types that
+			actually require it.</p><p>Because this example modifies the sample
+			database, you may want to run resetdb after
+			running this program.</p></div><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2806952"></a>Modifying data</h4></div></div><p>It almost as easy to modify data with
+			SSQLS. This is
+			<tt>examples/custom3.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+#include &lt;custom.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+sql_create_5(stock,
+            1, 5,
+            string, item,
+            longlong, num,
+            double, weight,
+            double, price,
+            Date, sdate)
+
+int
+main(int argc, char *argv[])
+{
+    try {
+        // Establish the connection to the database server.
+        Connection con(use_exceptions);
+        if (!connect_to_db(argc, argv, con)) {
+            return 1;
+        }
+
+        // Build a query to retrieve the stock item that has Unicode
+        // characters encoded in UTF-8 form.
+        Query query = con.query();
+        query &lt;&lt; &quot;select * from stock where item = \&quot;Nürnberger Brats\&quot;&quot;;
+
+        // Retrieve the row, throwing an exception if it fails.
+        Result res = query.store();
+        if (res.empty()) {
+            throw BadQuery(&quot;UTF-8 bratwurst item not found in &quot;
+                    &quot;table, run resetdb&quot;);
+        }
+
+        // Because there should only be one row in the result set,
+        // there's no point in storing the result in an STL container.
+        // We can store the first row directly into a stock structure
+        // because one of an SSQLS's constructors takes a Row object.
+        stock row = res.at(0);
+
+        // Create a copy so that the replace query knows what the
+        // original values are.
+        stock orig_row = row;
+
+        // Change the stock object's item to use only 7-bit ASCII, and
+        // to deliberately be wider than normal column widths printed
+        // by print_stock_table().
+        row.item = &quot;Nuerenberger Bratwurst&quot;;
+
+        // Form the query to replace the row in the stock table.
+        query.update(orig_row, row);
+
+        // Show the query about to be executed.
+        cout &lt;&lt; &quot;Query: &quot; &lt;&lt; query.preview() &lt;&lt; endl;
+
+        // Run the query with execute(), since UPDATE doesn't return a
+        // result set.
+        query.execute();
+
+        // Print the new table contents.
+        get_stock_table(query, res);
+        print_stock_rows(res);
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre><p>When you run the example you will notice
+			that in the WHERE clause only the 'item' field
+			is checked for. This is because SSQLS also also
+			less-than-comparable.</p><p>Don't forget to run resetdb after running
+			the example.</p></div><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2807000"></a>Less-than-comparable</h4></div></div><p>SSQLS structures can be sorted and
+			stored in STL associative containers as
+			demonstrated in the next example. This is
+			<tt>examples/custom4.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+#include &lt;custom.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+sql_create_5(stock,
+    1,  // This number is used to make a SSQLS less-than-comparable.
+        // When comparing two SSQLS structures, the first N elements are
+        // compared.  In this instance, we are saying that we only want
+        // the first element ('item') to be used when comparing two
+        // stock structures.
+
+    5,  // Each SSQLS structure includes a number of constructors.  Some
+        // of these are fixed in nature, but one of these will have this
+        // number of arguments, one for each of the first N elements in
+        // the structure; it is an initialization ctor.  Since N is the
+        // same as the number of structure elements in this instance,
+        // that ctor will be able to fully initialize the structure. This
+        // behavior is not always wanted, however, so the macro allows
+        // you make the constructor take fewer parameters, leaving the
+        // remaining elements uninitialized.  An example of when this is
+        // necessary is when you have a structure containing only two
+        // integer elements: one of the other ctors defined for SSQLS
+        // structures takes two ints, so the compiler barfs if you pass
+        // 2 for this argument.  You would need to pass 0 here to get
+        // that SSQLS structure to compile.
+    string, item,
+    longlong, num,
+    double, weight,
+    double, price,
+    Date, sdate)
+
+int
+main(int argc, char *argv[])
+{
+    try {
+        // Establish the connection to the database server.
+        Connection con(use_exceptions);
+        if (!connect_to_db(argc, argv, con)) {
+            return 1;
+        }
+
+        // Retrieve all rows from the stock table and put them in an
+        // STL set.  Notice that this works just as well as storing them
+        // in a vector, which we did in custom1.cpp.  It works because
+        // SSQLS objects are less-than comparable.
+        Query query = con.query();
+        query &lt;&lt; &quot;select * from stock&quot;;
+        set&lt;stock&gt; res;
+        query.storein(res);
+
+        // Display the result set.  Since it is an STL set and we set up
+        // the SSQLS to compare based on the item column, the rows will
+        // be sorted by item.
+        print_stock_header(res.size());
+        set&lt;stock&gt;::iterator it;
+        cout.precision(3);
+        for (it = res.begin(); it != res.end(); ++it) {
+            print_stock_row(it-&gt;item.c_str(), it-&gt;num, it-&gt;weight,
+                    it-&gt;price, it-&gt;sdate);
+        }
+
+        // Use set's find method to look up a stock item by item name.
+        // This also uses the SSQLS comparison setup.
+        it = res.find(stock(&quot;Hotdog Buns&quot;));
+        if (it != res.end()) {
+            cout &lt;&lt; endl &lt;&lt; &quot;Currently &quot; &lt;&lt; it-&gt;num &lt;&lt;
+                    &quot; hotdog buns in stock.&quot; &lt;&lt; endl;
+        }
+        else {
+            cout &lt;&lt; endl &lt;&lt; &quot;Sorry, no hotdog buns in stock.&quot; &lt;&lt; endl;
+        }
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre><p>For more details on the SSQLS feature, see the <a href="ssqls.html">Specialized SQL Structures</a> chapter.</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2807050"></a>3.8. Handling SQL Nulls</h3></div></div><p>There is no equivalent of SQL's null in the standard
+		C++ type system.</p><p>The primary distinction is one of type: in
+		SQL, null is a column attribute, which affects
+		whether that column can hold a SQL null. Just
+		like the 'const' keyword in the C++ type system,
+		this effectively doubles the number of SQL data
+		types. To emulate this, MySQL++ provides the <tt><a href="../../refman/html/classmysqlpp_1_1null.html">Null</a></tt> template
+		to allow the creation of distinct &quot;nullable&quot;
+		versions of existing C++ types. So
+		for example, if you have a <tt>TINY
+		INT UNSIGNED</tt> column that can have
+		nulls, the proper declaration for MySQL++ would
+		be:</p><pre class="programlisting">
+mysqlpp::Null&lt;unsigned char&gt; myfield;</pre><p>Template instantiations are first-class types
+		in the C++ language, on par with any other type. You
+		can use <tt>Null</tt>
+		template instantiations anywhere you'd use the
+		plain version of that type. (You can see a complete
+		list of <tt>Null</tt>
+		template instantiations for all column
+		types that MySQL understands at the top of
+		<tt>lib/type_info.cpp</tt>.)</p><p>There's a secondary distinction between SQL null
+		and anything available in the standard C++ type system:
+		SQL null is a distinct value, equal to nothing else. We
+		can't use C++'s <tt>NULL</tt>
+		for this because it is ambiguous, being equal to
+		0 in integer context. MySQL++ provides the global
+		<tt>null</tt> object, which you
+		can assign to a <tt>Null</tt>
+		template instance to make it equal to SQL null:</p><pre class="programlisting">
+myfield = mysqlpp::null;</pre><p>The final aspect of MySQL++'s null handling
+		is that, by default, it will enforce the uniqueness
+		of the SQL null value. If you try to convert a SQL
+		null to a plain C++ data type, MySQL++ will throw
+		a <tt><a href="../../refman/html/classmysqlpp_1_1BadNullConversion.html">BadNullConversion</a></tt>
+		exception. If you insert a SQL null into a C++
+		stream, you get &quot;(NULL)&quot;. If you don't like
+		this behavior, you can change it, by passing
+		a different value for the second parameter to
+		template <tt>Null</tt>. By
+		default, this parameter is <tt><a href="../../refman/html/structmysqlpp_1_1NullisNull.html">NullisNull</a></tt>, meaning that we should
+		enforce the uniqueness of the null type. To
+		relax this distinction, you can instantiate the
+		<tt>Null</tt> template with
+		a different behavior type: <tt><a href="../../refman/html/structmysqlpp_1_1NullisZero.html">NullisZero</a></tt> or <tt><a href="../../refman/html/structmysqlpp_1_1NullisBlank.html">NullisBlank</a></tt>. Consider this code:</p><pre class="programlisting">
+mysqlpp::Null&lt;unsigned char, mysqlpp::NullisZero&gt; myfield;
+
+myfield = mysqlpp::null;
+cout &lt;&lt; myfield &lt;&lt; endl;
+
+int x = myfield;
+cout &lt;&lt; x &lt;&lt; endl;</pre><p>This will print &quot;0&quot; twice. If
+		you had used the default for the second
+		<tt>Null</tt> template
+		parameter, the first output statement would have
+		printed &quot;(NULL)&quot;, and the second would have thrown
+		a <tt>BadNullConversion</tt>
+		exception.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2807266"></a>3.9. Which Query Type to Use?</h3></div></div><p>There are three major ways to execute a query in MySQL++:
+		<tt>Query::execute()</tt>,
+		<tt>Query::store()</tt>, and
+		<tt>Query::use()</tt>. Which should you
+		use, and why?</p><p><tt>execute()</tt>
+		is for queries that do not return data <span class="emphasis"><em>per
+		se</em></span>. For instance, <tt>CREATE
+		INDEX</tt>. You do get back some
+		information from the MySQL server, which
+		<tt>execute()</tt>
+		returns to its caller in a
+		<tt><a href="../../refman/html/classmysqlpp_1_1ResNSel.html">ResNSel</a></tt>
+		object. In addition to the obvious &#8212; a flag stating
+		whether the query succeeded or not &#8212; this object also
+		contains things like the number of rows that the query
+		affected. If you only need the success status, there's
+		<tt>Query::exec()</tt>, which
+		just returns bool.</p><p>If your query does pull data from
+		the database, the simplest option is
+		<tt>store()</tt>.
+		This returns a <tt><a href="../../refman/html/classmysqlpp_1_1Result.html">Result</a></tt>
+		object, which contains an in-memory copy of
+		the result set. The nice thing about this is
+		that <tt>Result</tt>
+		is a sequential container, like
+		<tt>std::vector</tt>, so you
+		can iterate through it forwards and backwards, access
+		elements with subscript notation, etc. There are also
+		the <tt>storein()</tt> methods,
+		which actually put the result set into an STL container
+		of your choice. The downside of these methods is that
+		a sufficiently large result set will give your program
+		memory problems.</p><p>For these large result sets, the superior
+		option is a <tt>use()</tt>
+		query. This returns a <tt><a href="../../refman/html/classmysqlpp_1_1ResUse.html">ResUse</a></tt> object, which is similar to Result,
+		but without all of the random-access features. This
+		is because a &quot;use&quot; query tells the database server
+		to send the results back one row at a time, to be
+		processed linearly. It's analogous to a C++ stream's
+		input iterator, as opposed to a random-access
+		iterator that a container like vector offers. By
+		accepting this limitation, you can process arbitrarily
+		large result sets. This technique is demonstrated
+		in <tt>examples/simple3.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+using namespace std;
+
+int
+main(int argc, char *argv[])
+{
+    // Connect to the sample database.
+    mysqlpp::Connection con(false);
+    if (!connect_to_db(argc, argv, con)) {
+        return 1;
+    }
+
+    // Ask for all rows from the sample stock table set up by resetdb.
+    // Unlike simple2 example, we don't store result set in memory.
+    mysqlpp::Query query = con.query();
+    query &lt;&lt; &quot;select * from stock&quot;;
+    mysqlpp::ResUse res = query.use();
+
+    // Retreive result rows one by one, and display them.
+    if (res) {
+        // Display header
+        cout.setf(ios::left);
+        cout &lt;&lt; setw(21) &lt;&lt; &quot;Item&quot; &lt;&lt;
+                setw(10) &lt;&lt; &quot;Num&quot; &lt;&lt;
+                setw(10) &lt;&lt; &quot;Weight&quot; &lt;&lt;
+                setw(10) &lt;&lt; &quot;Price&quot; &lt;&lt;
+                &quot;Date&quot; &lt;&lt; endl &lt;&lt; endl;
+
+        // Get each row in result set, and print its contents
+        mysqlpp::Row row;
+        while (row = res.fetch_row()) {
+            cout &lt;&lt; setw(20) &lt;&lt; row[&quot;item&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;num&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;weight&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;price&quot;] &lt;&lt; ' ' &lt;&lt;
+                    setw(9) &lt;&lt; row[&quot;sdate&quot;] &lt;&lt;
+                    endl;
+        }
+
+        return 0;
+    }
+    else {
+        cerr &lt;&lt; &quot;Failed to get stock item: &quot; &lt;&lt; query.error() &lt;&lt; endl;
+        return 1;
+    }
+}
+
+		</pre><p>This example does the same thing as
+		<tt>simple2</tt>, only with a &quot;use&quot;
+		query instead of a &quot;store&quot; query. If your program
+		uses exceptions, you should instead look at
+		<tt>examples/usequery.cpp</tt>, which
+		does the same thing as <tt>simple</tt>,
+		but with exception-awareness.</p></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2807492"></a>3.10. Getting Field Meta-Information</h3></div></div><p>The following example demonstrates how to get
+		information about the fields in a result set, such
+		as the name of the field and the SQL type. This is
+		<tt>examples/fieldinf1.cpp</tt>:</p><pre class="programlisting">
+#include &quot;util.h&quot;
+
+#include &lt;mysql++.h&gt;
+
+#include &lt;iostream&gt;
+#include &lt;iomanip&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+int
+main(int argc, char *argv[])
+{
+    try {
+        Connection con(use_exceptions);
+        if (!connect_to_db(argc, argv, con)) {
+            return 1;
+        }
+
+        Query query = con.query();
+        query &lt;&lt; &quot;select * from stock&quot;;
+        cout &lt;&lt; &quot;Query: &quot; &lt;&lt; query.preview() &lt;&lt; endl;
+
+        Result res = query.store();
+        cout &lt;&lt; &quot;Records Found: &quot; &lt;&lt; res.size() &lt;&lt; endl &lt;&lt; endl;
+
+        cout &lt;&lt; &quot;Query Info:\n&quot;;
+        cout.setf(ios::left);
+
+        for (unsigned int i = 0; i &lt; res.names().size(); i++) {
+            cout &lt;&lt; setw(2) &lt;&lt; i
+                    // this is the name of the field
+                    &lt;&lt; setw(15) &lt;&lt; res.names(i).c_str()
+                    // this is the SQL identifier name
+                    // Result::types(unsigned int) returns a mysql_type_info which in many
+                    // ways is like type_info except that it has additional sql type
+                    // information in it. (with one of the methods being sql_name())
+                    &lt;&lt; setw(15) &lt;&lt; res.types(i).sql_name()
+                    // this is the C++ identifier name which most closely resembles
+                    // the sql name (its is implementation defined and often not very readable)
+                    &lt;&lt; setw(20) &lt;&lt; res.types(i).name()
+                    &lt;&lt; endl;
+        }
+
+        cout &lt;&lt; endl;
+
+        if (res.types(0) == typeid(string)) {
+            // this is demonstrating how a mysql_type_info can be 
+            // compared with a C++ type_info.
+            cout &lt;&lt; &quot;Field 'item' is of an SQL type which most &quot;
+                    &quot;closely resembles\nthe C++ string type\n&quot;;
+        }
+
+        if (res.types(1) == typeid(longlong)) {
+            cout &lt;&lt; &quot;Field 'num' is of an SQL type which most &quot;
+                    &quot;closely resembles\nC++ long long int type\n&quot;;
+        }
+        else if (res.types(1).base_type() == typeid(longlong)) {
+            // you have to be careful as if it can be null the actual
+            // type is Null&lt;TYPE&gt; not TYPE.  So you should always use
+            // the base_type method to get at the underlying type.
+            // If the type is not null than this base type would be
+            // the same as its type.
+            cout &lt;&lt; &quot;Field 'num' base type is of an SQL type which &quot;
+                    &quot;most closely\nresembles the C++ long long int type\n&quot;;
+        }
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+		</pre></div><div class="sect2" lang="en"><div class="titlepage"><div><h3 class="title"><a name="id2807533"></a>3.11. Let's Do Something Useful</h3></div></div><p>These next few examples demonstrate just how powerful
+		C++ can be, allowing you to do a lot of work in few lines of
+		code without losing efficiency.</p><p>Since the code is meant to be re-used as-is,
+		constants that can differ from one case to another have
+		been grouped in order to simplify editing. Also, all of
+		these examples have full error checking code, showing off
+		the power of MySQL++'s exception handling features.</p><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2807556"></a>Loading binary file in a BLOB column</h4></div></div><p>Since MySQL 3.23, BLOB columns have
+			been available, but their use is sometimes
+			not straightforward. Besides showing how
+			easy it can be with MySQL++, this example
+			demonstrates several features of MySQL++.
+			The program requires one command line
+			parameter, which is a full path to the
+			binary file. This is
+			<tt>examples/load_file.cpp</tt>:</p><pre class="programlisting">
+#include &lt;mysql++.h&gt;
+
+#include &lt;sys/stat.h&gt;
+
+#include &lt;fstream&gt;
+
+#include &lt;stdlib.h&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+const char MY_DATABASE[] = &quot;telcent&quot;;
+const char MY_TABLE[] = &quot;fax&quot;;
+const char MY_HOST[] = &quot;localhost&quot;;
+const char MY_USER[] = &quot;root&quot;;
+const char MY_PASSWORD[] = &quot;&quot;;
+const char MY_FIELD[] = &quot;fax&quot;;  // BLOB field
+
+int
+main(int argc, char *argv[])
+{
+    if (argc &lt; 2) {
+        cerr &lt;&lt; &quot;Usage : load_file full_file_path&quot; &lt;&lt; endl &lt;&lt; endl;
+        return -1;
+    }
+
+    Connection con(use_exceptions);
+    try {
+        con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
+        Query query = con.query();
+        ostringstream strbuf;
+        ifstream In(argv[1], ios::in | ios::binary);
+        struct stat for_len;
+        if ((In.rdbuf())-&gt;is_open()) {
+            if (stat(argv[1], &amp;for_len) == -1)
+                return -1;
+            unsigned int blen = for_len.st_size;
+            if (!blen)
+                return -1;
+            char *read_buffer = new char[blen];
+            In.read(read_buffer, blen);
+            string fill(read_buffer, blen);
+            strbuf &lt;&lt; &quot;INSERT INTO &quot; &lt;&lt; MY_TABLE &lt;&lt; &quot; (&quot; &lt;&lt; MY_FIELD &lt;&lt;
+                &quot;) VALUES(\&quot;&quot; &lt;&lt; mysqlpp::escape &lt;&lt; fill &lt;&lt; &quot;\&quot;)&quot; &lt;&lt; ends;
+            query.exec(strbuf.str());
+            delete[]read_buffer;
+        }
+        else
+            cerr &lt;&lt; &quot;Failed to open &quot; &lt;&lt; argv[1] &lt;&lt;
+                    '.' &lt;&lt; endl;
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre><p>Notice that we used the
+			<tt>escape</tt>
+			manipulator when building the INSERT query
+			above. This is because we're not using one of
+			the MySQL++ types that does automatic escaping
+			and quoting.</p></div><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2807610"></a>Displaying images in HTML from BLOB column</h4></div></div><p>This example is also a very short
+			one, considering the function that it
+			performs. Although all modern versions of
+			MySQL have a command that dumps data from a BLOB
+			column to a binary file, this example shows
+			how to do it in your code instead, without
+			requiring an temporary file on disk. This is
+			<tt>examples/cgi_image.cpp</tt>:</p><pre class="programlisting">
+#include &lt;mysql++.h&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+#define MY_DATABASE &quot;telcent&quot;
+#define MY_TABLE    &quot;fax&quot;
+#define MY_HOST     &quot;localhost&quot;
+#define MY_USER     &quot;root&quot;
+#define MY_PASSWORD &quot;&quot;
+#define MY_FIELD    &quot;fax&quot;       // BLOB field
+#define MY_KEY      &quot;datet&quot;     // PRIMARY KEY
+
+int
+main(int argc, char *argv[])
+{
+    if (argc &lt; 2) {
+        cerr &lt;&lt; &quot;Usage : cgi_image primary_key_value&quot; &lt;&lt; endl &lt;&lt; endl;
+        return -1;
+    }
+
+    cout &lt;&lt; &quot;Content-type: image/jpeg&quot; &lt;&lt; endl;
+    Connection con(use_exceptions);
+    try {
+        con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
+        Query query = con.query();
+        query &lt;&lt; &quot;SELECT &quot; &lt;&lt; MY_FIELD &lt;&lt; &quot; FROM &quot; &lt;&lt; MY_TABLE &lt;&lt; &quot; WHERE &quot;
+            &lt;&lt; MY_KEY &lt;&lt; &quot; = &quot; &lt;&lt; argv[1];
+        ResUse res = query.use();
+        Row row = res.fetch_row();
+        long unsigned int *jj = res.fetch_lengths();
+        cout &lt;&lt; &quot;Content-length: &quot; &lt;&lt; *jj &lt;&lt; endl &lt;&lt; endl;
+        fwrite(row.raw_data(0), 1, *jj, stdout);
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre></div><div class="sect3" lang="en"><div class="titlepage"><div><h4 class="title"><a name="id2807654"></a>DELETE or UPDATE from SELECT</h4></div></div><p>MySQL's SELECT statement has more
+			power to winnow out just the items of
+			interest from the database than do DELETE
+			or UPDATE queries. Therefore, many people
+			have wanted the ability to execute a SELECT
+			statement that in fact deletes or updates
+			the rows matched, rather than returning
+			them. This example implements that feature
+			in just a few lines of code. It is
+			<tt>examples/updel.cpp</tt>:</p><pre class="programlisting">
+#include &lt;mysql++.h&gt;
+
+#include &lt;string&gt;
+
+using namespace std;
+using namespace mysqlpp;
+
+#define MY_DATABASE &quot;telcent&quot;
+#define MY_TABLE    &quot;nazivi&quot;
+#define MY_HOST     &quot;localhost&quot;
+#define MY_USER     &quot;root&quot;
+#define MY_PASSWORD &quot;&quot;
+#define MY_FIELD    &quot;naziv&quot;
+#define MY_QUERY    &quot;SELECT URL from my_table as t1, my_table as t2 where t1.field = t2.field&quot;
+
+int
+main()
+{
+    Connection con(use_exceptions);
+    try {
+        ostringstream strbuf;
+        unsigned int i = 0;
+        con.connect(MY_DATABASE, MY_HOST, MY_USER, MY_PASSWORD);
+        Query query = con.query();
+        query &lt;&lt; MY_QUERY;
+        ResUse res = query.use();
+        Row row;
+        strbuf &lt;&lt; &quot;delete from &quot; &lt;&lt; MY_TABLE &lt;&lt; &quot; where &quot; &lt;&lt; MY_FIELD &lt;&lt;
+            &quot; in (&quot;;
+        //  for UPDATE just replace the above DELETE FROM with UPDATE statement
+        for (; row = res.fetch_row(); i++)
+            strbuf &lt;&lt; row.at(0) &lt;&lt; &quot;,&quot;;
+        if (!i)
+            return 0;
+        string output(strbuf.str());
+        output.erase(output.size() - 1, 1);
+        output += &quot;)&quot;;
+        query.exec(output);
+        //cout &lt;&lt; output &lt;&lt; endl;
+    }
+    catch (const BadQuery&amp; er) {
+        // Handle any query errors
+        cerr &lt;&lt; &quot;Query error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+    catch (const BadConversion&amp; er) {
+        // Handle bad conversions
+        cerr &lt;&lt; &quot;Conversion error: &quot; &lt;&lt; er.what() &lt;&lt; endl &lt;&lt;
+                &quot;\tretrieved data size: &quot; &lt;&lt; er.retrieved &lt;&lt;
+                &quot;, actual size: &quot; &lt;&lt; er.actual_size &lt;&lt; endl;
+        return -1;
+    }
+    catch (const Exception&amp; er) {
+        // Catch-all for any other MySQL++ exceptions
+        cerr &lt;&lt; &quot;Error: &quot; &lt;&lt; er.what() &lt;&lt; endl;
+        return -1;
+    }
+
+    return 0;
+}
+
+			</pre><p>Notice that the row values
+			used in the IN clause aren't escaped or
+			quoted. This is because row elements are
+			<tt><a href="../../refman/html/classmysqlpp_1_1ColData__Tmpl.html">ColData</a></tt>
+			types, so they have automatic escaping and
+			quoting, as appropriate to the type being
+			inserted. If you want to disable this feature,
+			it's easily done: click the ColData link for
+			the details.</p><p>Users of this example should beware that
+			one more check is required in order to run this
+			query safely: in some extreme cases, the size
+			of the query might grow larger than MySQL's
+			maximum allowed packet size. This check should
+			be added.</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="overview.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="tquery.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2. Overview </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 4. Template Queries</td></tr></table></div></body></html>

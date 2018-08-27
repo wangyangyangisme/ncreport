@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf8"?>
+<NCReport
+    name="rtest"
+    encoding="utf8"
+    pageSize="A4"
+    orientation="P"
+    printerMode="normal"
+    topMargin="15"
+    bottomMargin="15"
+    leftMargin="15"
+    rightMargin="15"
+    defaultFontName=""
+    defaultFontSize="10"
+    backcolor="#FFFFFF"
+    masterAlias="master"
+    >
+    
+<queries>
+    <query alias="master">
+        SELECT rtext AS text1,rtext2 as text2, rtext3 as text3 FROM richtext
+    </query>
+</queries>
+<variables>
+</variables>
+<pageHeader height="26.594">
+    <line fromX="0.000" fromY="11.397" toX="179.103" toY="11.397" lineWidth="3" lineStyle="solid"></line>
+    <label posX="0.000" posY="4.885" width="81.410" height="6.513" fontSize="14" fontWeight="bold" fontName="Arial" forecolor="#000000">Dynamic height items test</label>
+    <label posX="0.000" posY="16.282" width="32.564" height="4.885" fontName="" fontUnderline="true" forecolor="#000000">Field1</label>
+    <label posX="63.500" posY="16.282" width="32.564" height="4.885" fontName="" fontUnderline="true" forecolor="#000000">Field2</label>
+    <label posX="123.744" posY="16.282" width="32.564" height="9.769" wordbreak="true" forecolor="#000000">Field3</label>
+</pageHeader>
+<pageFooter height="8">
+    <line fromX="0.000" fromY="1.628" toX="169.605" toY="1.628" lineWidth="1" lineStyle="solid"></line>
+    <label posX="1.628" posY="3.256" width="97.692" height="4.885" fontSize="8" forecolor="#000000">Report footer. This is a simple text.</label>
+    <field ftype="sys" type="" posX="153.051" posY="3.256" width="16.282" height="4.885" fontSize="8" alignmentH="right" forecolor="#000000" embedString="Page %1">pageno</field>
+</pageFooter>
+<groups>
+</groups>
+<detail height="5.15598">
+    <field ftype="sql" type="" posX="0.000" posY="0.000" width="61.872" height="4.885" fontName="Arial" richText="true" dynamicHeight="true" forecolor="#000000">text1</field>
+    <field ftype="sql" type="" posX="63.500" posY="0.000" width="58.615" height="4.885" fontName="Arial" richText="true" dynamicHeight="true" forecolor="#000000">text2</field>
+    <field ftype="sql" type="" posX="123.744" posY="0.000" width="55.359" height="4.885" fontName="Arial" richText="true" dynamicHeight="true" forecolor="#000000">text3</field>
+</detail>
+</NCReport>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="20"
+   name=""
+   committed-date="2007-06-26T16:11:42.099630Z"
+   url="http://nszabo@ncreport.longbros.com/svn/ncreport-qt4/src/ncreportrunner"
+   last-author="nszabo"
+   kind="dir"
+   uuid="97395f20-3330-0410-9970-a9ea93e038d9"
+   revision="22"/>
+<entry
+   committed-rev="20"
+   name="ncreport.rc"
+   text-time="2007-02-13T16:36:48.000000Z"
+   committed-date="2007-06-26T16:11:42.099630Z"
+   checksum="2110e0b6d31182e669de3ac0369af2cf"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:12:41.000000Z"/>
+<entry
+   committed-rev="20"
+   name="ncreporttestform.cpp"
+   text-time="2007-06-26T13:46:54.000000Z"
+   committed-date="2007-06-26T16:11:42.099630Z"
+   checksum="00d5e0157b50ad660038e44e6d65db2e"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="13"
+   name="main.cpp"
+   text-time="2007-06-25T17:48:15.000000Z"
+   committed-date="2007-06-25T18:01:01.690691Z"
+   checksum="280817e05240b9ea3dbf4b393970f4a4"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="20"
+   name="ncreportrunner.pro"
+   text-time="2007-06-26T11:15:16.000000Z"
+   committed-date="2007-06-26T16:11:42.099630Z"
+   checksum="42b18393a78ca01aae69eb85c7deb5e0"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="20"
+   name="ncreport.ico"
+   text-time="2007-06-26T10:54:04.000000Z"
+   committed-date="2007-06-26T16:11:42.099630Z"
+   checksum="b4ee6ee950d86cd12fda9ff1bc956739"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:12:37.000000Z"/>
+<entry
+   committed-rev="20"
+   name="ncreporttestform.h"
+   text-time="2007-06-26T11:56:00.000000Z"
+   committed-date="2007-06-26T16:11:42.099630Z"
+   checksum="fa76eece657f00ab38dcc0c90fe699c7"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+</wc-entries>

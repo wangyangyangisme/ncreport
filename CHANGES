@@ -1,0 +1,89 @@
+0.7.30
+-------
+- NCReport compiled as library
+- Report runner form compiled separately
+- Added XML output enhancement
+- Added TXT output enhancement (data only)
+- addParameter memory leak fixed
+- Richtext handling fixes
+- Fix parser bug which caused crash sometime
+- Vertical text alignment fix
+- Report runner form improvements
+- some other small fixes
+
+0.7.23
+-------
+- fix testform bug when compile
+- updated samples
+
+0.7.22
+-------
+- field's printWhen bug fixed
+- testform now handles pdf output
+- fixed/updated src.pro project file 
+
+0.7.21
+-------
+- uses iconfactory class for preview icons
+- small bugfixes
+
+0.7.20
+-------
+- possible to use dynamic lenghted, multi paged richtexts for detail section
+- text file as report datasource
+- labels and fields may have file resources
+- page footer distance fix
+- printWhen="%2" feature for current record number
+- test form
+- preview form fixes
+- other fixes
+
+
+0.7.10
+-------
+- lookup virtual class handling for custom report items (see install.txt)
+- using private database connection is possible with NCReport::setDatabase(...)
+- fix printWhen compare bug
+- fix error when NCSqlQuery::getRowCount() returns -1 and results "Data not found in master query" message
+- preview window handles it's position and size by own with instead of NCWidgetPosHandler
+- icon path handling by iconbasepath setting
+- extended numeric data format definition (Old format code can also be used. See install.txt)
+- other small bugfixes
+
+
+0.7.02
+-------
+- pdf output capability
+- page orientation now adjustable
+- image size now adjustable (must set)
+- fix bad printing resolution bug
+- fix page margin problem
+- fix linux/windows compatible bug
+- code cleaning
+
+0.7.01
+-------
+- This version of NCReport has ported to Qt4
+- some bugfixes
+- code cleaning
+- one more example with grouping
+
+
+0.5.20
+-------
+- some bugfixes
+- code cleaning
+- print report from print preview
+- easier understandable examples in main.cpp
+
+
+0.5.12
+-------
+- bugfixes
+
+
+before 0.5.12
+-------------
+
+Before publication NCReport tested with many of different reports and 
+thousands of printed pages (invoices, documents, price lists, inventory reports, etc..) since 2 years

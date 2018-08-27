@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type">
+  <title>testpage</title>
+</head>
+<body>
+<ul style="color: rgb(255, 204, 0); font-weight: bold;">
+  <li><big>3. Tutorial</big></li>
+</ul>
+<br>
+This tutorial is meant to give you a jump start in using MySQL++. While
+it is a very complicated and powerful library, it's possible to make
+quite functional programs without tapping but a fraction of its power.
+This section will introduce you to the most useful fraction.<br>
+<br>
+<span style="color: rgb(51, 51, 255);">This tutorial assumes you know C++ fairly well, in particuler the Standard Template</span> Library (STL) and exceptions.<br>
+<ul style="font-weight: bold;">
+  <li><big>3.1. Running the Examples</big></li>
+</ul>
+<br>
+All of the examples are complete running programs. They may or may not
+be built for you already, depending on how you installed the library.<br>
+<br>
+If you installed MySQL++ from the source tarball on a Unixy system, the
+examples should have been built along with the library. If not, simply
+go into the examples directory and type make.<br>
+<br>
+If you installed the library via RPM, the examples are in the
+mysql++-devel RPM. After installing that, the examples are in
+/usr/src/mysql++/examples. To build them, go into that directory and
+type make -f Makefile.simple. See the file
+/usr/share/doc/mysql++-devel*/README.examples for more details.<br>
+<br>
+If you are on a <span style="color: rgb(204, 0, 0);">Windows system, the build process for the library should have built the examples as well. </span>Where
+the programs are depends on which compiler you're using. There should
+be a README.* file in the distribution specific to your compiler with
+further instructions.<br>
+<br>
+Once you have the examples building, you need to initialize the sample
+database by running the resetdb example. The usage of resetdb is as
+follows:<br>
+&nbsp;&nbsp;&nbsp; resetdb [host [user [password [port]]]]<br>
+<br>
+If you leave off host, localhost is assumed. If you leave off user,
+your current username is assumed. If you leave of the password, it is
+assumed that you don't need one. And if you leave off the port, it will
+use the standard MySQL port number.<br>
+<br>
+The user you give resetdb needs to be an account with permission to
+create databases. Once the database is created you can use any account
+that has full permission to the sample database mysql_cpp_data.<br>
+<br>
+You may also have to re-run resetdb after running some of the other examples, as they change the database.<br>
+</body>
+</html>

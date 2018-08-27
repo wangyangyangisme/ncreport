@@ -1,0 +1,18 @@
+<!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+     <file>images/app.png</file>
+     <file>images/close.png</file>
+     <file>images/firstpage.png</file>
+     <file>images/gotopage.png</file>
+     <file>images/lastpage.png</file>
+     <file>images/newwindow.png</file>
+     <file>images/nextpage.png</file>
+     <file>images/openfile.png</file>
+     <file>images/prevpage.png</file>
+     <file>images/print.png</file>
+     <file>images/printpreview.png</file>
+     <file>images/zoom_minus.png</file>
+     <file>images/zoom_plus.png</file>
+ </qresource>
+ </RCC> 
+ 

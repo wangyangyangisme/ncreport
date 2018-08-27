@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="1"
+   name=""
+   committed-date="2007-05-11T15:11:00.086555Z"
+   url="http://nszabo@ncreport.longbros.com/svn/ncreport-qt4/northwind"
+   last-author="root"
+   kind="dir"
+   uuid="97395f20-3330-0410-9970-a9ea93e038d9"
+   revision="22"/>
+<entry
+   committed-rev="1"
+   name="northwind.sql"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="55d6119f9af27093b5b5c24c9bba5cad"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+</wc-entries>

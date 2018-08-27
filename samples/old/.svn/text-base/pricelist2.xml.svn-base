@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+
+<NCReport
+	name="artlist_c1"
+	pageSize="A4"
+	topMargin="10"
+	bottomMargin="14"
+	leftMargin="10"
+	rightMargin="10"
+	masterAlias="prod"
+	backcolor="#FFFFFF">
+
+<queries>
+	<query alias="prod">
+			select products.*,
+			products.unitprice*1.2 as unitprice2,
+			products.unitprice*1.5 as unitprice3,
+			products.unitprice*1.7 as unitprice4,
+			products.unitprice*products.QuantityPerUnit as value,
+			categories.categoryname from products, categories
+			WHERE products.categoryID = categories.categoryID
+ 			AND products.productname LIKE '$P{prodFilt}'
+			/*AND products.productname LIKE 'e%'*/
+			ORDER BY categoryname,productname
+	</query>
+	<query alias="company">
+		select 'Useful Company Ltd.' as name, 
+			'10100 Nowhere, Something str. 55.' as fulladdress,
+			'Taxcode: 00000000-0-00' as taxcode,
+			'Account no.: 00000000-00000000-00000000' as account,
+			'Phone: 555-8740-14' as phone,
+			'Fax: 555-8741-15' as fax,
+			'E-mail: info@usefulcompany.com' as mail
+	</query>
+</queries>
+
+<variables>
+	<variable name="cnt1" type="numeric" funcType="count"></variable>
+	<variable name="sum1" type="numeric" funcType="sum">value</variable>
+</variables>
+
+<pageHeader height="23">
+	<pixmap posX="0" posY="0" resource="companylogo.png"></pixmap>
+	<field ftype="sql" fontSize="8" posX="130" posY="4" width="60" alignmentH="right">company.name</field>
+	<field ftype="sql" fontSize="8" posX="130" posY="8" width="60" alignmentH="right">company.fulladdress</field>
+	<label fontSize="12" fontWeight="bold" posX="0" posY="8" alignmentH="center" forecolor="#0000FF">Product prices</label>
+
+	<rectangle posX="0" posY="14" height="6" lineWidth="1" roundValue="0" lineColor="#0000FF"></rectangle>
+	<label fontSize="8" posX="1" posY="15" alignmentH="left" forecolor="#0000FF">No.</label>
+	<label fontSize="8" posX="7" posY="15" alignmentH="left" forecolor="#0000FF">Product no.</label>
+	<label fontSize="8" posX="31" posY="15" alignmentH="left" forecolor="#0000FF">Product name</label>
+	<label fontSize="8" posX="101" posY="15" alignmentH="right" width="19" forecolor="#0000FF">List price</label>
+	<label fontSize="8" posX="121" posY="15" alignmentH="right" width="19" forecolor="#0000FF">Price II.</label>
+	<label fontSize="8" posX="141" posY="15" alignmentH="right" width="19" forecolor="#0000FF">Price III.</label>
+	<label fontSize="8" posX="161" posY="15" alignmentH="right" width="19" forecolor="#0000FF">Value</label>
+	<!--
+	<field ftype="sql" fontSize="8" posX="101" posY="15" alignmentH="right" width="19" forecolor="#0000FF">List price</field>
+	<field ftype="sql" fontSize="8" posX="121" posY="15" alignmentH="right" width="19" forecolor="#0000FF">Price II.</field>
+	<field ftype="sql" fontSize="8" posX="141" posY="15" alignmentH="right" width="19" forecolor="#0000FF">Price III.</field>
+	<field ftype="sql" fontSize="8" posX="161" posY="15" alignmentH="right" width="19" forecolor="#0000FF">Price IV.</field>
+	-->
+</pageHeader>
+<pageFooter height="11">
+	<field ftype="par" fontSize="8" posX="0" posY="0" width="190" wordbreak="true" embedString="List conditions: Product name like %1">prodFilt</field>
+	<line fromX="0" fromY="5" toX="190" toY="5" lineWidth="1" lineColor="#0000FF"></line>
+	<field ftype="sys" fontSize="6" posX="0" posY="6.4" embedString="%1">appinfo</field>
+	<field ftype="sys" fontSize="8" posX="175" posY="6.4" width="15" alignmentH="right" embedString="page %1">pageno</field>
+</pageFooter>
+
+<groups>
+	<group name="g1" groupExpression="categoryID" resetVariables="cnt1,sum1">
+		<groupHeader height="5">
+			<rectangle posX="0" posY="0" height="5" lineWidth="1" lineStyle="nopen" fillStyle="filled" fillColor="#CCCCFF" roundValue="0"></rectangle>
+			<field ftype="sql" fontSize="10" posX="3" posY="0" fontWeight="bold">categoryname</field>
+		</groupHeader>
+		<groupFooter height="6">
+			<label fontSize="8" posX="140" posY="1" alignmentH="left" width="30" forecolor="#0000FF">Total group value:</label>
+			<line fromX="140" fromY="1" toX="190" toY="1" lineWidth="1" lineColor="#0000FF"></line> 
+			<field ftype="var" fontSize="8" posX="161" posY="1" width="20" type="numeric" alignmentH="right" numFormat="%L1;0f1" fontWeight="bold" numSeparation="true">sum1</field>
+		</groupFooter>
+	</group>
+</groups>
+
+<detail height="4">
+ 	<field ftype="var" fontSize="8" posX="0" posY="0" width="6" alignmentH="right">cnt1</field>
+	<field ftype="sql" fontSize="8" posX="15" posY="0" width="23">productID</field>
+	<field ftype="sql" fontSize="8" posX="31" posY="0" width="74">productname</field>
+	<field ftype="sql" fontSize="8" posX="101" posY="0" width="20" type="numeric" alignmentH="right" numFormat="%10.3f" numSeparation="false">unitprice</field>
+	<field ftype="sql" fontSize="8" posX="121" posY="0" width="20" type="numeric" alignmentH="right" numFormat="%10.3f" numSeparation="false">unitprice2</field>
+	<field ftype="sql" fontSize="8" posX="141" posY="0" width="20" type="numeric" alignmentH="right" numFormat="%10.3f" numSeparation="false">unitprice3</field>
+	<field ftype="sql" fontSize="8" posX="161" posY="0" width="20" type="numeric" alignmentH="right" numFormat="%L1;0f1" numSeparation="true">value</field>
+</detail>
+
+</NCReport>

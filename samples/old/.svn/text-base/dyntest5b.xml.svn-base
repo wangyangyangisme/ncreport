@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf8"?>
+<NCReport
+    name="dynamictest"
+    encoding="utf8"
+    pageSize="A4"
+    orientation="P"
+    printerMode="normal"
+    topMargin="15"
+    bottomMargin="10"
+    leftMargin="20"
+    rightMargin="20"
+    defaultFontName="Arial"
+    defaultFontSize="10"
+    backcolor="#FFFFFF"
+    masterAlias="prod"
+    >
+    
+<queries>
+    <query alias="prod">
+        SELECT * FROM northwind.richtext
+    </query>
+</queries>
+<variables>
+</variables>
+<pageHeader height="15.7393">
+    <pixmap posX="0.000" posY="0.000" width="32.564" height="9.769" resource="companylogo.png"></pixmap>
+    <label posX="53.731" posY="6.513" width="115.603" height="8.141" fontSize="14" fontWeight="bold" fontItalic="true" alignmentH="right" forecolor="#000000">Dynamic text report test</label>
+    <line fromX="0.000" fromY="13.026" toX="169.605" toY="13.026" lineWidth="2" lineStyle="solid"></line>
+</pageHeader>
+<pageFooter height="8.95513">
+    <line fromX="0.000" fromY="1.628" toX="169.605" toY="1.628" lineWidth="1" lineStyle="solid"></line>
+    <label posX="1.628" posY="3.256" width="97.692" height="4.885" fontSize="8" forecolor="#000000">Report footer. This is a simple text.</label>
+    <field ftype="sys" type="" posX="153.051" posY="3.256" width="16.282" height="4.885" fontSize="8" alignmentH="right" forecolor="#000000" embedString="Page %1">pageno</field>
+</pageFooter>
+<groups>
+</groups>
+<detail height="5.15598">
+    <field ftype="sql" type="" posX="1.628" posY="0.000" width="167.705" height="4.885" richText="true" dynamicHeight="true" loadFromFile="true" forecolor="#000000">labes.html</field>
+</detail>
+</NCReport>

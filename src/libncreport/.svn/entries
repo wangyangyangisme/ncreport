@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="22"
+   name=""
+   committed-date="2007-06-26T16:15:15.672723Z"
+   url="http://nszabo@ncreport.longbros.com/svn/ncreport-qt4/src/libncreport"
+   last-author="nszabo"
+   kind="dir"
+   uuid="97395f20-3330-0410-9970-a9ea93e038d9"
+   revision="22"/>
+<entry
+   name="uic"
+   kind="dir"/>
+<entry
+   committed-rev="3"
+   name="ncreport_de.qm"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="72027e4f988d7b8a9e0d6412daabf916"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:16.000000Z"/>
+<entry
+   committed-rev="22"
+   name="ncreport.qrc"
+   text-time="2007-06-26T11:23:54.000000Z"
+   committed-date="2007-06-26T16:15:15.672723Z"
+   checksum="99804d7ce8ab29371ebef6896c1de7a8"
+   last-author="nszabo"
+   kind="file"/>
+<entry
+   name="debian"
+   kind="dir"/>
+<entry
+   committed-rev="18"
+   name="ncreport.h"
+   text-time="2007-06-26T13:01:14.000000Z"
+   committed-date="2007-06-26T16:08:14.062856Z"
+   checksum="1b431d040f63e2ca1a44a9113a2e3cf1"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:16.000000Z"/>
+<entry
+   committed-rev="19"
+   name="nciconfactory.cpp"
+   text-time="2007-06-26T11:25:12.000000Z"
+   committed-date="2007-06-26T16:09:01.615683Z"
+   checksum="9807e9453fd6621cf30c0cabc5026fd5"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:16.000000Z"/>
+<entry
+   committed-rev="15"
+   name="nciconfactorybase.h"
+   text-time="2007-06-25T17:28:13.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="d336d56379324a270d03fdfea7fd22bb"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:16.000000Z"/>
+<entry
+   committed-rev="19"
+   name="libncreport.pro"
+   text-time="2007-06-26T11:18:52.000000Z"
+   committed-date="2007-06-26T16:09:01.615683Z"
+   checksum="f88e88b0b50fff67eb1b67498d3fda2f"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:16.000000Z"/>
+<entry
+   committed-rev="15"
+   name="ncpreview.cpp"
+   text-time="2007-06-25T17:53:30.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="e699b6a1f6d895c27247de97dfe94d13"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="15"
+   name="ncsqlquery.cpp"
+   text-time="2007-06-25T17:22:25.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="d83ed13fc6a839486f09c97224597b1e"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="15"
+   name="nciconfactory.h"
+   text-time="2007-06-25T17:28:04.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="3f73d46d7f21bff80fd8ab33d716e675"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="3"
+   name="ncpreview.h"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="d3c191433e004185acd5ffc3e34d031c"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="3"
+   name="ncreport_de.ts"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="76c0fa5a07b639201e40e2e5a8d66a7a"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="15"
+   name="ncsqlquery.h"
+   text-time="2007-06-25T17:14:04.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="3e9e3936ca92214f4e03fbe8b60290ed"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="3"
+   name="ncutils.cpp"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="6531be7037a9817fcd4d5d5fb28ca573"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   name="images"
+   kind="dir"
+   copyfrom-rev="22"
+   copyfrom-url="http://nszabo@ncreport.longbros.com/svn/ncreport-qt4/images"/>
+<entry
+   name="lib"
+   kind="dir"/>
+<entry
+   name="rcc"
+   kind="dir"/>
+<entry
+   committed-rev="3"
+   name="ncutils.h"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="e16e9658c8c7fa900e0ffc2e75b76591"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="3"
+   name="ncreport_es.ts"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="87928683258475ca628658fdf9eab2b8"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="15"
+   name="globals.h"
+   text-time="2007-06-25T17:20:39.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="2b6c8fe0f1cab65dba6fa2f3dc7bc6f3"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="18"
+   name="reportparser.cpp"
+   text-time="2007-06-26T07:02:21.000000Z"
+   committed-date="2007-06-26T16:08:14.062856Z"
+   checksum="a68f6d1592cae27e72a0d28f213864be"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   name="obj"
+   kind="dir"/>
+<entry
+   committed-rev="15"
+   name="nciconfactorybase.cpp"
+   text-time="2007-06-25T17:27:46.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="30feca044f1cf7f74d05b30e0e9f83b6"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="3"
+   name="ncreport_hu.ts"
+   text-time="2007-06-25T14:22:17.000000Z"
+   committed-date="2007-05-11T18:29:45.802333Z"
+   checksum="e26687eb2b270d3f5b3aaa042cc3e097"
+   last-author="bflong"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   committed-rev="18"
+   name="ncreport.cpp"
+   text-time="2007-06-26T14:18:26.000000Z"
+   committed-date="2007-06-26T16:08:14.062856Z"
+   checksum="f5aa0a1a564f0f36de7b5253f667d78c"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+<entry
+   name="moc"
+   kind="dir"/>
+<entry
+   committed-rev="15"
+   name="reportparser.h"
+   text-time="2007-06-25T17:11:56.000000Z"
+   committed-date="2007-06-25T18:11:50.189011Z"
+   checksum="ebc8efafd499dd436050dbdd34e9b7f5"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-25T14:22:17.000000Z"/>
+</wc-entries>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="23"
+   name=""
+   committed-date="2007-06-26T16:43:25.502281Z"
+   url="http://nszabo@ncreport.longbros.com/svn/ncreport-qt4/src/libncreport/images"
+   last-author="nszabo"
+   kind="dir"
+   uuid="97395f20-3330-0410-9970-a9ea93e038d9"
+   revision="23"/>
+<entry
+   committed-rev="23"
+   name="print.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="d40ccc0f648bbb47fd53960f07450e47"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="printpreview.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="874e8e23ac59e04671ab2d7ea56747c0"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="zoom_minus.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="2772964afd3bd5ab0dcd70ef50592857"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="app.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="aae342dd6aa3a1bcb08053295d9af982"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="lastpage.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="e18ae04968d90d9cf4c56768a343ded1"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="openfile.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="3cfeb9acecd0b7e19688bbedfe35739a"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="newwindow.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="12cfcd4505b457c7bb95b7f1f52f8014"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="firstpage.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="fc9fb98e37e84726106172dbd5dff166"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="gotopage.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="49aa690acce1027ec31d923ad868068b"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="close.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="2a2c2c669781637d505077f25ff5b245"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="zoom_plus.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="ad635d527520b9621c7d8439ae065002"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="prevpage.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="b8be69ae5881920b301b1838b29c0e7e"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+<entry
+   committed-rev="23"
+   name="nextpage.png"
+   text-time="2007-06-26T16:44:29.000000Z"
+   committed-date="2007-06-26T16:43:25.502281Z"
+   checksum="84b45632ccc3a9d5f0fab88a738b4686"
+   last-author="nszabo"
+   kind="file"
+   prop-time="2007-06-26T16:44:29.000000Z"/>
+</wc-entries>

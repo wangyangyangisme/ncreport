@@ -1,0 +1,93 @@
+NCReport Installation Instructions
+==================================
+
+Before compiling NCReport you will need to have the appropriate Qt
+libraries installed on your system. In addition, NCReport currently
+tested with the MySql database using Qt's QMYSQL driver. At this
+time, if you wish to use a different driver you will have to compile the
+appropriate Qt drivers and make any changes necessary to NCReport to
+support driver specific code.
+
+To compile NCReport run the followings:
+=======================================
+
+untar/unzip ncreport???.tar.gz
+change to ncreport directory
+
+ qmake
+ make
+
+This will compile NCReport into a command line executable binary file.
+If you'd like to use NCReport classes in your Qt application and not as 
+command line tool, you may analyze main.cpp how can the class be used.
+
+
+How to use NCReport:
+====================
+
+Please learn the main.cpp sample. The sample code describes the way of
+usage. The suggested order in your code:
+
+1. create your qt application object
+2. connect to a database
+3. create ncreport object
+4. set initial options
+5. add parameters (optional)
+6. set output ( printer/preview/pdf )
+7. run report with ->runReport()
+
+
+To run sample reports:
+======================
+
+Before all create database/tables. NCReport currently tested with the 
+MySql database. Sql script is located in /northwind directory. The script
+creates mysql sample tables and sample datas. (Samples certainly need
+installed and running mysql database server)
+
+Use the main testform contained in the project to try or test your reports!
+
+
+Command-line start sample reports:
+==================================
+
+
+To run (print) examples from ncreport directory :
+
+./ncreport n -print
+
+To run (preview) examples from ncreport directory :
+
+./ncreport n -preview
+
+To run (pdf) examples from ncreport directory :
+
+./ncreport n -pdf
+
+
+(where n=0 -> price list, n=1 -> invoice, n=2 -> price list with total groups)
+
+
+Use as command line tool:
+=========================
+
+If you want to use NCReport as command line tool uncomment the MODE_COMMANDLINE
+define. See the "start_sample..." scripts how to use NCReport as a command line
+tool. You may also start the sample script(s). The sample report
+definition XML files are in /samples directory. 
+To use the program, always change to ncreport directory. The report engine 
+and the preview use files relative from this directory.
+
+To show command line help in command line mode:
+
+ncreport -help
+
+
+
+
+
+
+
+
+
+

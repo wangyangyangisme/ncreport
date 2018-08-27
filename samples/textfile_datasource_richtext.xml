@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf8"?>
+<NCReport
+    name="dynamictest"
+	dataSource="text"
+	resourceTextFile="resource.txt"
+	textDataDelimiter="tab"
+    encoding="utf8"
+    pageSize="A4"
+    orientation="P"
+    printerMode="normal"
+    topMargin="20"
+    bottomMargin="20"
+    leftMargin="20"
+    rightMargin="20"
+    defaultFontName=""
+    defaultFontSize="10"
+    backcolor="#FFFFFF"
+    masterAlias="prod"
+    >
+    
+<queries>
+</queries>
+<variables>
+</variables>
+<pageHeader height="23.8803">
+    <pixmap posX="0.000" posY="0.000" width="32.564" height="9.769" resource="companylogo.png"></pixmap>
+    <label posX="53.731" posY="6.513" width="115.603" height="8.141" fontSize="14" fontWeight="bold" fontItalic="true" alignmentH="right" forecolor="#000000">Text resourced report test</label>
+    <line fromX="0.000" fromY="13.026" toX="169.605" toY="13.026" lineWidth="2" lineStyle="solid"></line>
+    <label posX="1.628" posY="17.910" width="16.282" height="4.885" fontWeight="bold" fontName="" forecolor="#000000">ID.</label>
+    <label posX="13.026" posY="17.910" width="65.128" height="4.885" fontWeight="bold" fontName="" forecolor="#000000">Product name</label>
+    <label posX="83.038" posY="17.910" width="65.128" height="4.885" fontWeight="bold" fontName="" forecolor="#000000">Remark (richtext)</label>
+</pageHeader>
+<pageFooter height="11.1261">
+    <line fromX="0.000" fromY="1.628" toX="169.605" toY="1.628" lineWidth="1" lineStyle="solid"></line>
+    <label posX="1.628" posY="3.256" width="97.692" height="4.885" fontSize="8" fontName="" forecolor="#000000">Report footer. This is a simple text.</label>
+    <field ftype="sys" type="" posX="153.051" posY="3.256" width="16.282" height="4.885" fontSize="8" fontName="" alignmentH="right" forecolor="#000000" embedString="Page %1">pageno</field>
+</pageFooter>
+<groups>
+</groups>
+<detail height="5">
+    <field ftype="text" type="" posX="1.628" posY="0.000" width="9.769" height="4.885" fontName="" forecolor="#000000">0</field>
+	<field ftype="text" type="" posX="13.026" posY="0.000" width="68.385" height="4.885" richText="true" dynamicHeight="true">1</field>
+    <field ftype="text" type="" posX="83.038" posY="0.000" width="86.295" height="4.885" richText="true" dynamicHeight="true">2</field>
+</detail>
+</NCReport>

@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+
+<NCReport
+	name="invoice1"
+	topMargin="10"
+	bottomMargin="10"
+	leftMargin="10"
+	rightMargin="10"
+	masterAlias="documentitems"
+	defaultFontName="Arial"
+	backcolor="#FFFFFF">
+
+	<queries>
+		<query alias="documentitems">
+			select oi.itemno, oi.orderid, oi.orderid, oi.productid, oi.quantity,oi.discount,
+			oi.unitprice, p.productid, p.productname, p.unitsinstock, 
+				(oi.unitprice * oi.Quantity) as nvalue,
+				(oi.unitprice * oi.Quantity)*oi.discount/100 as discountvalue
+			FROM orderitems oi
+			INNER JOIN products p ON oi.productID = p.productID 
+			WHERE oi.orderID=$P{documentPK}
+			ORDER BY oi.itemno
+	</query>
+	<query alias="dochead">
+			select orders.*,'c00521-2254' as refinfo, 'USD' as currency FROM orders 
+			WHERE orders.orderID =$P{documentPK}
+	</query>
+	<query alias="customer">
+		select customers.* FROM customers, orders
+		WHERE orders.customerID = customers.customerID
+		AND orders.orderID = $P{documentPK} limit 0,1
+	</query>
+	<query alias="company">
+		select 'Useful Company Ltd.' as name, 
+			'10100 Nowhere, Something str. 55.' as fulladdress,
+			'Taxcode: 00000000-0-00' as taxcode,
+			'Account no.: 00000000-00000000-00000000' as account,
+			'Phone: 555-8740-14' as phone,
+			'Fax: 555-8741-15' as fax,
+			'E-mail: info@usefulcompany.com' as mail
+	</query>
+	<query alias="rem">
+		select 'Something remark text ' as remark,
+			'This is an sql footer message...' as footmsg
+	</query>
+</queries>
+
+<variables>
+	<variable name="sumnetto" type="numeric" funcType="sum">nvalue</variable>
+	<variable name="sumdsc" type="numeric" funcType="sum">discountvalue</variable>
+</variables>
+
+<pageHeader height="65">
+	<pixmap posX="0" posY="0" resource="companylogo.png" width="0" height="0"></pixmap>
+	<label fontSize="22" fontWeight="bold" posX="0" posY="8" width="190" alignmentH="center" forecolor="#000000">I n v o i c e</label>
+	<field ftype="sys" fontSize="8" posX="160" posY="10" width="30" alignmentH="right" forecolor="#000000" embedString="%1. copy">currentcopy</field>
+	<field ftype="sys" fontSize="8" posX="160" posY="14" width="30" alignmentH="right" forecolor="#000000" embedString="Total copies: %1">numcopies</field>
+<!--	<label fontName="Times" fontSize="36" fontWeight="bold" posX="90" posY="10" width="120" height="40" wordbreak="true" alignmentH="center" forecolor="#D0D0D0" rotation="45">This can be a watermark</label>
+-->
+	<rectangle posX="0" posY="18" height="30" width="190" lineWidth="1" lineColor="#000000"></rectangle>
+	<line fromX="95" fromY="18" toX="95" toY="48" lineWidth="1" lineColor="#000000"></line>
+<!-- 	<rectangle posX="402" posY="100" height="120" width="398" lineWidth="1" lineColor="#000000"></rectangle> //-->
+	<label fontSize="8" posX="1" posY="19" forecolor="#000000">Seller</label>
+	<label fontSize="8" posX="96" posY="19" forecolor="#000000">Customer</label>
+	
+	<field ftype="sql" fontSize="12" posX="4" posY="23" fontWeight="bold">company.name</field>
+	<field ftype="sql" fontSize="10" posX="4" posY="28">company.fulladdress</field>
+	<field ftype="sql" fontSize="10" posX="4" posY="32">company.taxcode</field>
+	<field ftype="sql" fontSize="10" posX="4" posY="36">company.account</field>
+	<field ftype="sql" fontSize="10" posX="4" posY="40">company.phone</field>
+
+	<field ftype="sql" fontSize="10" posX="100" posY="23" width="85" height="8" wordbreak="true">customer.companyname</field>
+	<field ftype="sql" fontSize="10" posX="100" posY="31">customer.city</field>
+	<field ftype="sql" fontSize="10" posX="100" posY="35">customer.address</field>
+	<field ftype="sql" fontSize="10" posX="100" posY="39">customer.postalcode</field>
+	<!-- Date row -->
+	<rectangle posX="0" posY="49" height="9" lineWidth="1" lineColor="#000000"></rectangle>
+	<line fromX="38" fromY="49" toX="38" toY="58" lineWidth="1" lineColor="#000000"></line>
+	<line fromX="76" fromY="49" toX="76" toY="58" lineWidth="1" lineColor="#000000"></line>
+	<line fromX="114" fromY="49" toX="114" toY="58" lineWidth="1" lineColor="#000000"></line>
+	<line fromX="152" fromY="49" toX="152" toY="58" lineWidth="1" lineColor="#000000"></line>
+
+	<label fontSize="8" posX="1" posY="49.5" forecolor="#000000">Invoice date:</label>
+	<label fontSize="8" posX="39" posY="49.5" forecolor="#000000">Order date:</label>
+	<label fontSize="8" posX="77" posY="49.5" forecolor="#000000">Required:</label>
+	<label fontSize="8" posX="115" posY="49.5" forecolor="#000000">Shipped date:</label>
+	<label fontSize="8" posX="153" posY="49.5" forecolor="#000000">Invoice no.:</label>
+
+	<field ftype="sql" fontSize="10" posX="10" posY="53">dochead.orderdate</field>
+	<field ftype="sql" fontSize="10" posX="48" posY="53">dochead.orderdate</field>
+	<field ftype="sql" fontSize="10" posX="86" posY="53">dochead.RequiredDate</field>
+	<field ftype="sql" fontSize="10" posX="122" posY="53">dochead.ShippedDate</field>
+	<field ftype="sql" fontSize="10" posX="160" posY="53" fontWeight="bold">dochead.orderID</field>
+
+	<!-- <rectangle posX="0" posY="258" width="300" height="35" lineWidth="1" lineColor="#000000"></rectangle> -->
+	<label fontSize="8" posX="1" posY="58" forecolor="#000000">References:</label>
+	<field ftype="sql" fontSize="10" posX="20" posY="59">dochead.refinfo</field>
+
+	<!--
+	<label fontSize="10" posX="10" posY="100">Date:</label>
+	<field ftype="sql" fontSize="14" posX="100" posY="100" fontWeight="bold">dochead.date</field>
+	<label fontSize="10" posX="10" posY="116">Documentno:</label>
+	<field ftype="sql" fontSize="14" posX="100" posY="116" fontWeight="bold" fontItalic="true">dochead.documentno</field>
+	-->
+</pageHeader>
+<pageFooter height="30">
+	<field ftype="sql" fontSize="8" height="10" width="190" posX="0" posY="15" wordbreak="true" alignmentH="center" >rem.footmsg</field>
+
+	<rectangle posX="0" posY="0" height="13" width="106" lineWidth="1" lineColor="#000000"></rectangle>
+<!-- 	<line fromX="600" fromY="0" toX="800" toY="28" lineWidth="1" lineColor="#000000"></line> //-->
+	<line fromX="53" fromY="0" toX="53" toY="13" lineWidth="1" lineColor="#000000"></line>
+	<label fontSize="8" posX="1" posY="1" forecolor="#000000">Company</label>
+	<label fontSize="8" posX="54" posY="1" forecolor="#000000">Customer</label>
+
+	<line fromX="0" fromY="25" toX="190" toY="25" lineWidth="1" lineColor="#000000"></line>
+	<field ftype="sys" fontSize="8" posX="0" posY="27" embedString="About: %1">appinfo</field>
+	<field ftype="sys" fontSize="8" posX="180" posY="27" embedString="page %1">pageno</field>
+</pageFooter>
+
+<groups>
+	<group name="g1" groupExpression="orderID" resetVariables="sumnetto,sumdsc">
+		<groupHeader height="8">
+			<rectangle posX="0" posY="0" height="7" lineWidth="1" lineColor="#000000"></rectangle>
+			<label fontSize="8" posX="1" posY="0.5" forecolor="#000000">No.</label>
+			<label fontSize="8" posX="7" posY="0.5" forecolor="#000000">Stat.code</label>
+			<label fontSize="8" posX="26" posY="0.5" forecolor="#000000">Product number + name</label>
+			<label fontSize="8" posX="71" posY="0.5" forecolor="#000000">Qty.</label>
+			<label fontSize="8" posX="86" posY="0.5" forecolor="#000000">Unit price</label>
+			<label fontSize="8" posX="104" posY="0.5" forecolor="#000000">Discnt</label>
+			<label fontSize="8" posX="104" posY="3" forecolor="#000000">%</label>
+			<label fontSize="8" posX="126" posY="0.5" forecolor="#000000">Total</label>
+
+			<line fromX="6" fromY="0" toX="6" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="25" fromY="0" toX="25" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="70" fromY="0" toX="70" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="85" fromY="0" toX="85" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="103" fromY="0" toX="103" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="125" fromY="0" toX="125" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="145" fromY="0" toX="145" toY="7" lineWidth="1" lineColor="#000000"></line>
+			<line fromX="168" fromY="0" toX="168" toY="7" lineWidth="1" lineColor="#000000"></line>
+
+		</groupHeader>
+		<groupFooter height="30">
+			<line fromX="0" fromY="0" toX="190" toY="0" lineWidth="1" lineColor="#000000"></line>
+			<field ftype="var" fontSize="8" posX="125" posY="1" width="19" type="numeric" alignmentH="right" numFormat="%9.2f">sumnetto</field>
+			<line fromX="120" fromY="6" toX="190" toY="6" lineWidth="1" lineColor="#000000"></line>
+			<label fontSize="12" posX="120" posY="8" forecolor="#000000">Total:</label>
+			<field ftype="var" fontSize="12" posX="150" posY="8" width="30" type="numeric" alignmentH="right" numFormat="%10.0f" numSeparation="true" fontWeight="bold">sumnetto</field>
+			<field ftype="sql" fontSize="10" posX="182" posY="8" width="8">dochead.currency</field>
+
+			<!--Remark -->
+			<field ftype="sql" fontSize="10" posX="0" posY="23" width="150" wordbreak="true">rem.remark</field>
+
+		</groupFooter>
+		</group>
+</groups>
+
+<detail height="8">
+	<field ftype="sql" fontSize="8" posX="0" posY="0" width="5" alignmentH="right">itemno</field>
+	<!-- <field ftype="sql" fontSize="8" posX="7" posY="0">statcode</field> -->
+	<field ftype="sql" fontSize="8" posX="26" posY="0">productID</field>
+	<field ftype="sql" fontSize="8" posX="26" posY="4">productName</field>
+	<field ftype="sql" fontSize="8" posX="68" posY="0" width="12" type="numeric" alignmentH="right" fontWeight="bold">Quantity</field>
+	<field ftype="sql" fontSize="8" posX="81" posY="0" width="7">unitsInStock</field>
+	<field ftype="sql" fontSize="8" posX="86" posY="0" width="17" type="numeric" alignmentH="right" numFormat="%5.2f">unitprice</field>
+	<field ftype="sql" fontSize="8" posX="104" posY="0" width="5" type="numeric" alignmentH="right" numBlankIfZero="true">discount</field>
+	<field ftype="sql" fontSize="8" posX="110" posY="0" width="15" type="numeric" alignmentH="right" numBlankIfZero="true">discountvalue</field>
+	<field ftype="sql" fontSize="8" posX="126" posY="0" width="18" type="numeric" alignmentH="right" numFormat="%9.2f">nvalue</field>
+
+	<!--
+	<field ftype="sql" fontSize="10" posX="300" posY="0" width="58" type="numeric" numFormat="%9.2f" numSeparation="true" alignmentH="right">qty</field>
+	-->
+</detail>
+</NCReport>

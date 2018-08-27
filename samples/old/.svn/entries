@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="1"
+   name=""
+   committed-date="2007-05-11T15:11:00.086555Z"
+   url="http://nszabo@ncreport.longbros.com/svn/ncreport-qt4/samples/old"
+   last-author="root"
+   kind="dir"
+   uuid="97395f20-3330-0410-9970-a9ea93e038d9"
+   revision="22"/>
+<entry
+   committed-rev="1"
+   name="dyntest6.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="8ad5b40ebed7b54a2438d55ecef1c671"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="pricelist2.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="8dd2e8882b9cf57bee745733aa99f468"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest5b.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="520418a64e0af6634a1cd5a828d8adcd"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest_f2.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="c3e81917b306c6493c0d5aed1aef860b"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="pricelist3.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="da1ca2eeeb7072321654cc3754497f38"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="a82f5e5e52dc96240af63dc6e147f3be"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="multi-dynamic-items.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="4e580d2d01e259b8c29512c2129e4529"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="invoice.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="f92fd26ca3e1fcdd1fa7b2b086f9df21"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="pricelist.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="8dd2e8882b9cf57bee745733aa99f468"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="textresource-test-dyn.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="c1b55f94471b3ccc21193a5efa67d9f9"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="p_text.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="6daea71cae0a47fe57ee35831330c641"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest_large.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="bd9f28748a08a91a5c65327459b51f7d"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="textresource-test.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="6d87a961792b34272f8b6d2919013842"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest2.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="b7084f4ae69f2ed8dabea2e742deffdf"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest3.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="c5d3e3bc05760febd816aade6e8e1c13"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest4.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="131a3518cdcc322d665e20a696af447b"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+<entry
+   committed-rev="1"
+   name="dyntest5.xml"
+   text-time="2007-06-25T14:22:19.000000Z"
+   committed-date="2007-05-11T15:11:00.086555Z"
+   checksum="fec6c1c1b61704eba5805500a18b4912"
+   last-author="root"
+   kind="file"
+   prop-time="2007-06-25T14:22:19.000000Z"/>
+</wc-entries>
